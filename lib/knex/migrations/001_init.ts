@@ -1,8 +1,6 @@
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
-exports.up = async function (knex) {
+import type { Knex } from 'knex'
+
+export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('users', (table) => {
     table.increments('id').primary()
     table.string('name').notNullable()
@@ -32,11 +30,7 @@ exports.up = async function (knex) {
   })
 }
 
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
-exports.down = async function (knex) {
+export async function down(knex: Knex): Promise<void> {
   await knex.raw('DROP TABLE users CASCADE')
   await knex.raw('DROP TABLE tasks CASCADE')
 }
