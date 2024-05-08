@@ -39,12 +39,20 @@ export default async function page({}: Props) {
           <span>{user.middle_name}</span>
         </div>
         <div>
-          <span>Id руководителя : </span>
-          <span>{user.manager_id || 'нет'}</span>
+          <span>Должность : </span>
+          <span>
+            {user.manager_id !== null ? 'Подчиненный' : 'Руководитель'}
+          </span>
         </div>
+        {user.manager_id && (
+          <div>
+            <span>Id руководителя : </span>
+            <span>{user.manager_id || 'нет'}</span>
+          </div>
+        )}
       </div>
       <form action={logout}>
-        <button type="submit">Logout</button>
+        <button type="submit">Выйти из аккаунта</button>
       </form>
       <button>
         <Link href="/tasks">Перейти на страницу задач</Link>
