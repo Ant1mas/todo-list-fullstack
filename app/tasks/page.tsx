@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 
 import { logout } from '@/lib/actions/auth'
 import { verifySession } from '@/lib/dataAccessLayer'
+import Link from 'next/link'
 
 type Props = {}
 
@@ -14,13 +15,15 @@ export default async function page({}: Props) {
 
   return (
     <div>
-      <div>Tasks page</div>
+      <div>Задачи</div>
       <div>
-        {isAuth.toString()}
-        {userId}
+        <div>Id: {userId}</div>
         <form action={logout}>
-          <button type="submit">Logout</button>
+          <button type="submit">Выйти из аккаунта</button>
         </form>
+        <button>
+          <Link href="/profile">Перейти в профиль</Link>
+        </button>
       </div>
     </div>
   )
