@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 
-import { signin } from '@/lib/actions/auth'
+import LoginForm from '@/components/LoginForm'
 import { verifySession } from '@/lib/dataAccessLayer'
 
 type Props = {}
@@ -13,17 +13,9 @@ export default async function page({}: Props) {
   }
 
   return (
-    <div>
-      <form action={signin}>
-        <input id="login" name="login" placeholder="Login" />
-        <input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Password"
-        />
-        <button type="submit">Login</button>
-      </form>
+    <div className="flex flex-col justify-center items-center p-5 min-h-screen">
+      <div className="text-2xl pb-4 uppercase font-light">Авторизация</div>
+      <LoginForm />
     </div>
   )
 }
