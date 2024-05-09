@@ -1,3 +1,5 @@
+'use server'
+
 import bcrypt from 'bcryptjs'
 import { redirect } from 'next/navigation'
 
@@ -5,7 +7,6 @@ import { getKnex } from '@/lib/knex'
 import { createSession, deleteSession } from '@/lib/session'
 
 export async function signin(formData: FormData) {
-  'use server'
   // Validate form fields
   const login = formData.get('login')
   const password: string = formData.get('password')?.toString() || ''
@@ -27,7 +28,6 @@ export async function signin(formData: FormData) {
 }
 
 export async function logout() {
-  'use server'
   deleteSession()
   redirect('/login')
 }

@@ -1,14 +1,14 @@
 import { redirect } from 'next/navigation'
 
 import { logout } from '@/lib/actions/auth'
-import { getUser, verifySession } from '@/lib/dataAccessLayer'
+import { getUserData, verifySession } from '@/lib/dataAccessLayer'
 import Link from 'next/link'
 
 type Props = {}
 
 export default async function page({}: Props) {
   const { isAuth } = await verifySession()
-  const user = await getUser()
+  const user = await getUserData()
 
   if (!isAuth) {
     redirect('/login')
