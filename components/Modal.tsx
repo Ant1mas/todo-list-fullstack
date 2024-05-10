@@ -23,26 +23,28 @@ export default function Modal({ show = false, onClose, children }: Props) {
 
   const modalContent = show ? (
     <div
-      className="fixed inset-0 bg-black bg-opacity-20 z-40 flex justify-center items-center backdrop-blur-sm p-4"
+      className="fixed grid inset-0 bg-black bg-opacity-20 z-40 overflow-y-auto backdrop-blur-sm"
       onClick={(e) => {
         e.stopPropagation()
         onClose()
       }}
     >
-      <div
-        className="bg-white p-5 rounded-lg shadow-xl"
-        onClick={(e) => {
-          e.stopPropagation()
-        }}
-      >
-        {children}
-        <div className="flex justify-end">
-          <button
-            onClick={handleCloseClick}
-            className="bg-blue-500 hover:bg-blue-700 mt-3 text-white text-sm uppercase py-2 px-4 rounded-xl "
-          >
-            Закрыть
-          </button>
+      <div className="flex items-center justify-center">
+        <div
+          className="bg-white p-5 rounded-lg shadow-xl m-4"
+          onClick={(e) => {
+            e.stopPropagation()
+          }}
+        >
+          {children}
+          <div className="flex justify-end">
+            <button
+              onClick={handleCloseClick}
+              className="bg-blue-500 hover:bg-blue-700 mt-3 text-white text-sm uppercase py-2 px-4 rounded-xl"
+            >
+              Закрыть
+            </button>
+          </div>
         </div>
       </div>
     </div>
