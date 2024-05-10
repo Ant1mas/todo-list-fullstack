@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import type { Metadata } from 'next'
 
+import RootProviders from '@/components/RootProviders'
 import { DEFAULT_METADATA } from '@/lib/config/defaultMetadata'
 import { roboto } from '@/lib/config/fonts'
 import '@/styles/globals.css'
@@ -22,7 +23,7 @@ export default function RootLayout({
       <head />
       <body>
         <div id="modal-root"></div>
-        <div>{children}</div>
+        <RootProviders>{children}</RootProviders>
       </body>
     </html>
   )

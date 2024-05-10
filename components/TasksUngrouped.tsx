@@ -6,11 +6,10 @@ import type { Task } from '@/app/tasks/types'
 
 type Props = {
   tasks: Task[]
-  userData: any
 }
 
-export default function TasksUngrouped({ tasks, userData }: Props) {
+export default function TasksUngrouped({ tasks }: Props) {
   return tasks.map((task: Task) => {
-    return <TaskRow task={task} key={task.id} userData={userData} />
+    return <TaskRow task={task} key={task.id} />
   })
 }

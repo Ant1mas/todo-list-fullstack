@@ -1,9 +1,11 @@
 'use client'
 
+import { MobxProvider } from '@/lib/config/mobx/MobxProvider'
+
 type Props = {
-  children: React.ReactElement | React.ReactElement[]
+  children: React.ReactNode | React.ReactNode[]
 }
 
 export default function RootProviders({ children }: Props) {
-  return <>{children}</>
+  return <MobxProvider>{children}</MobxProvider>
 }

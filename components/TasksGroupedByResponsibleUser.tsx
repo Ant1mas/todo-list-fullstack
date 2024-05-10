@@ -8,13 +8,9 @@ import type { Task } from '@/app/tasks/types'
 
 type Props = {
   tasks: { [key: string]: Task[] }
-  userData: any
 }
 
-export default function TasksGroupedByResponsibleUser({
-  tasks,
-  userData,
-}: Props) {
+export default function TasksGroupedByResponsibleUser({ tasks }: Props) {
   return Object.keys(tasks).map((responsibleUser) => (
     <React.Fragment key={responsibleUser}>
       <tr>
@@ -23,7 +19,7 @@ export default function TasksGroupedByResponsibleUser({
         </td>
       </tr>
       {tasks[responsibleUser].map((task) => {
-        return <TaskRow task={task} key={task.id} userData={userData} />
+        return <TaskRow task={task} key={task.id} />
       })}
     </React.Fragment>
   ))

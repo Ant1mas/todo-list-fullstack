@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react'
 import { createNewTask, updateTask } from '@/app/tasks/actions'
 import FormFieldInput from '@/components/FormFieldInput'
 import FormFieldSelect from '@/components/FormFieldSelect'
+import { useMobxStore } from '@/lib/config/mobx/MobxProvider'
 import { schemaTaskData } from '@/lib/config/yup/taskData'
 import {
   PRIORITY_SWITCH_OPTIONS,
@@ -19,20 +20,20 @@ import type { Task } from '@/app/tasks/types'
 
 type Props = {
   task: Task
-  userData?: object
   onUpdate?: (newState: Task) => any
 }
 
-export default function TaskForm({ task, userData, onUpdate }: Props) {
+export default function TaskForm({ task, onUpdate }: Props) {
   const [taskState, setTaskState] = useState<Task>(task)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const mobxStore: any = useMobxStore()
   const finishDate = toDateTimeLocal(new Date(taskState?.finish_at || ''))
   const createdAt = dateToString(new Date(taskState?.created_at || '') || '')
   const updatedAt = dateToString(new Date(taskState?.updated_at || '') || '')
   const allowedFields = useMemo(
-    () => getAllowedTaskFields(taskState, userData),
-    [taskState, userData],
+    () => getAllowedTaskFields(taskState, mobxStore.userData),
+    [taskState, mobxStore.userData],
   )
   const formik = useFormik({
     initialValues: {

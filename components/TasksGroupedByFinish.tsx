@@ -11,7 +11,6 @@ type Props = {
     week: Task[]
     future: Task[]
   }
-  userData: any
 }
 
 const ORDER = ['today', 'week', 'future']
@@ -21,7 +20,7 @@ const GROUPS_DICTIONARY: { [key: string]: string } = {
   future: 'На будущее',
 }
 
-export default function TasksGroupedByFinish({ tasks, userData }: Props) {
+export default function TasksGroupedByFinish({ tasks }: Props) {
   return ORDER.map((group: string) => {
     return (
       <React.Fragment key={group}>
@@ -32,7 +31,7 @@ export default function TasksGroupedByFinish({ tasks, userData }: Props) {
         </tr>
         {/* @ts-ignore */}
         {tasks[group]?.map((task: Task) => {
-          return <TaskRow task={task} key={task.id} userData={userData} />
+          return <TaskRow task={task} key={task.id} />
         })}
       </React.Fragment>
     )
