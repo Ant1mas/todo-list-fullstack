@@ -11,8 +11,17 @@ export const getAllTasks = cache(async () => {
   try {
     const knex = getKnex()
     const data = await knex('tasks')
-      .join('users', 'tasks.responsible_user_id', 'users.id')
-      .select('tasks.*', 'users.login')
+      .leftJoin('users as creator', 'tasks.created_by', 'creator.id')
+      .leftJoin(
+        'users as responsible',
+        'tasks.responsible_user_id',
+        'responsible.id',
+      )
+      .select(
+        'tasks.*',
+        'creator.login as creator_login',
+        'responsible.login as responsible_login',
+      )
       .orderBy('updated_at', 'desc')
     return data
   } catch (error) {
@@ -27,9 +36,18 @@ export const getUserTasks = cache(async (userId: number) => {
   try {
     const knex = getKnex()
     const data = await knex('tasks')
-      .join('users', 'tasks.responsible_user_id', 'users.id')
+      .leftJoin('users as creator', 'tasks.created_by', 'creator.id')
+      .leftJoin(
+        'users as responsible',
+        'tasks.responsible_user_id',
+        'responsible.id',
+      )
       .where('responsible_user_id', userId)
-      .select('tasks.*', 'users.login')
+      .select(
+        'tasks.*',
+        'creator.login as creator_login',
+        'responsible.login as responsible_login',
+      )
       .orderBy('updated_at', 'desc')
     return data
   } catch (error) {
@@ -44,9 +62,18 @@ export const getManagerTasks = cache(async (managerId: number) => {
   try {
     const knex = getKnex()
     const data = await knex('tasks')
-      .join('users', 'tasks.responsible_user_id', 'users.id')
-      .where('users.manager_id', '=', managerId)
-      .select('tasks.*', 'users.login')
+      .leftJoin('users as creator', 'tasks.created_by', 'creator.id')
+      .leftJoin(
+        'users as responsible',
+        'tasks.responsible_user_id',
+        'responsible.id',
+      )
+      .where('responsible.manager_id', '=', managerId)
+      .select(
+        'tasks.*',
+        'creator.login as creator_login',
+        'responsible.login as responsible_login',
+      )
       .orderBy('updated_at', 'desc')
     return data
   } catch (error) {

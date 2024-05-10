@@ -3,44 +3,39 @@
 import clsx from 'clsx'
 import { useState } from 'react'
 
+import Modal from '@/components/Modal'
+import TaskForm from '@/components/TaskForm'
 import { PRIORITIES, STATUSES } from '@/lib/constants/tasks'
+import { dateToString } from '@/lib/functions/dateToString'
 import { getTaskColor } from '@/lib/functions/getTaskColor'
 
 import type { Task } from '@/app/tasks/types'
-import Modal from '@/components/Modal'
 
 type Props = {
   task: Task
 }
 
 export default function TaskRow({ task }: Props) {
-  const [showModal, setShowModal] = useState(false)
-  const priority = PRIORITIES[task.priority]
-  const status = STATUSES[task.status]
-  const date = new Date(task.finish_at).toLocaleString('ru-ru', {
-    hour12: false,
-    dateStyle: 'short',
-  })
-  const time = new Date(task.finish_at).toLocaleString('ru-ru', {
-    hour12: false,
-    timeStyle: 'short',
-  })
-  const datetime = `${date} ${time}`
-  const responsibleUserLogin = task.login
-  const taskColor = getTaskColor(task)
+  const [taskState, setTaskState] = useState<Task>(task)
+  const [taskOnEdit, setTaskOnEdit] = useState<Task | null>(null)
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const priority = PRIORITIES[taskState.priority]
+  const status = STATUSES[taskState.status]
+  const finishDate = dateToString(new Date(taskState.finish_at))
+  const responsibleUserLogin = taskState.responsible_login
+  const taskColor = getTaskColor(taskState)
 
   return (
     <>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <p>This is modal content!</p>
+        <TaskForm task={taskOnEdit} />
       </Modal>
       <tr
-        key={task.id}
+        key={taskState.id}
         className="cursor-pointer duration-150 hover:bg-gray-50"
         onClick={() => {
+          setTaskOnEdit(taskState)
           setShowModal(true)
-          console.log(`Clicked task id${task.id}`)
-          console.log(task)
         }}
       >
         <td
@@ -51,11 +46,11 @@ export default function TaskRow({ task }: Props) {
             taskColor === 'red' ? 'bg-red-200' : null,
           )}
         >
-          {task.title}
+          {taskState.title}
         </td>
         <td className="px-2 py-1">{priority}</td>
-        <td className="px-2">{datetime}</td>
-        <td className="px-2" title={`ID: ${task.responsible_user_id}`}>
+        <td className="px-2">{finishDate}</td>
+        <td className="px-2" title={`ID: ${taskState.responsible_user_id}`}>
           {responsibleUserLogin}
         </td>
         <td className="px-2">{status}</td>

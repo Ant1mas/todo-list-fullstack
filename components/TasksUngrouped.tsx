@@ -8,6 +8,6 @@ type Props = {
 
 export default function TasksUngrouped({ tasks }: Props) {
   return tasks.map((task: Task) => {
-    return <TaskRow task={task} />
+    return <TaskRow task={task} key={task.id} />
   })
 }
