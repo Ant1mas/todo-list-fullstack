@@ -20,7 +20,6 @@ export default function TaskForm({ task, onUpdated }: Props) {
       <div>Ответственный: {task?.responsible_login}</div>
       <div>Приоритет: {task?.priority}</div>
       <div>Статус: {task?.status}</div>
-      <div>Выполнено: {task?.completed.toString()}</div>
       <div>Дата окончания: {finishDate}</div>
       <div>Создал: {task?.creator_login}</div>
       <div>Дата создания: {createdAt}</div>

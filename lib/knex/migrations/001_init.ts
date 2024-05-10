@@ -15,7 +15,6 @@ export async function up(knex: Knex): Promise<void> {
     table.increments('id').primary()
     table.string('title').notNullable()
     table.string('description').notNullable()
-    table.boolean('completed').notNullable().defaultTo(false)
     table.timestamp('finish_at').notNullable().defaultTo(knex.fn.now())
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
