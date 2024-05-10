@@ -1,7 +1,9 @@
+'use client'
+
 import TaskRow from '@/components/TaskRow'
-import { getUserData } from '@/lib/dataAccessLayer'
 
 import type { Task } from '@/app/tasks/types'
+import React from 'react'
 
 type Props = {
   tasks: {
@@ -9,6 +11,7 @@ type Props = {
     week: Task[]
     future: Task[]
   }
+  userData: any
 }
 
 const ORDER = ['today', 'week', 'future']
@@ -18,12 +21,10 @@ const GROUPS_DICTIONARY: { [key: string]: string } = {
   future: 'На будущее',
 }
 
-export default async function TasksGroupedByFinish({ tasks }: Props) {
-  const userData = await getUserData()
-
+export default function TasksGroupedByFinish({ tasks, userData }: Props) {
   return ORDER.map((group: string) => {
     return (
-      <>
+      <React.Fragment key={group}>
         <tr>
           <td colSpan={5} className="text-center font-bold pt-3">
             {GROUPS_DICTIONARY[group]}
@@ -33,7 +34,7 @@ export default async function TasksGroupedByFinish({ tasks }: Props) {
         {tasks[group]?.map((task: Task) => {
           return <TaskRow task={task} key={task.id} userData={userData} />
         })}
-      </>
+      </React.Fragment>
     )
   })
 }

@@ -1,4 +1,6 @@
-import { getUserData } from '@/lib/dataAccessLayer'
+import { redirect } from 'next/navigation'
+
+import { getUserData, verifySession } from '@/lib/dataAccessLayer'
 import Link from 'next/link'
 
 export default async function layout({
@@ -6,7 +8,12 @@ export default async function layout({
 }: {
   children: React.ReactNode
 }) {
+  const { isAuth } = await verifySession()
   const userData = await getUserData()
+
+  if (!isAuth) {
+    redirect('/login')
+  }
 
   return (
     <div className="flex flex-col items-center">

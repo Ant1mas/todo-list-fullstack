@@ -1,17 +1,20 @@
+'use client'
+
 import React from 'react'
 
 import TaskRow from '@/components/TaskRow'
-import { getUserData } from '@/lib/dataAccessLayer'
 
 import type { Task } from '@/app/tasks/types'
 
 type Props = {
   tasks: { [key: string]: Task[] }
+  userData: any
 }
 
-export default async function TasksGroupedByResponsibleUser({ tasks }: Props) {
-  const userData = await getUserData()
-
+export default function TasksGroupedByResponsibleUser({
+  tasks,
+  userData,
+}: Props) {
   return Object.keys(tasks).map((responsibleUser) => (
     <React.Fragment key={responsibleUser}>
       <tr>
