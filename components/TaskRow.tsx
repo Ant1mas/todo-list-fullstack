@@ -1,17 +1,20 @@
 'use client'
 
 import clsx from 'clsx'
+import { useState } from 'react'
 
 import { PRIORITIES, STATUSES } from '@/lib/constants/tasks'
 import { getTaskColor } from '@/lib/functions/getTaskColor'
 
 import type { Task } from '@/app/tasks/types'
+import Modal from '@/components/Modal'
 
 type Props = {
   task: Task
 }
 
 export default function TaskRow({ task }: Props) {
+  const [showModal, setShowModal] = useState(false)
   const priority = PRIORITIES[task.priority]
   const status = STATUSES[task.status]
   const date = new Date(task.finish_at).toLocaleString('ru-ru', {
@@ -27,29 +30,35 @@ export default function TaskRow({ task }: Props) {
   const taskColor = getTaskColor(task)
 
   return (
-    <tr
-      key={task.id}
-      onClick={() => {
-        console.log(`Clicked task id${task.id}`)
-        console.log(task)
-      }}
-    >
-      <td
-        className={clsx(
-          'px-2',
-          taskColor === 'gray' ? 'bg-gray-200' : null,
-          taskColor === 'green' ? 'bg-green-200' : null,
-          taskColor === 'red' ? 'bg-red-200' : null,
-        )}
+    <>
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <p>This is modal content!</p>
+      </Modal>
+      <tr
+        key={task.id}
+        onClick={() => {
+          setShowModal(true)
+          console.log(`Clicked task id${task.id}`)
+          console.log(task)
+        }}
       >
-        {task.title}
-      </td>
-      <td className="px-2">{priority}</td>
-      <td className="px-2">{datetime}</td>
-      <td className="px-2" title={`ID: ${task.responsible_user_id}`}>
-        {responsibleUserLogin}
-      </td>
-      <td className="px-2">{status}</td>
-    </tr>
+        <td
+          className={clsx(
+            'px-2',
+            taskColor === 'gray' ? 'bg-gray-200' : null,
+            taskColor === 'green' ? 'bg-green-200' : null,
+            taskColor === 'red' ? 'bg-red-200' : null,
+          )}
+        >
+          {task.title}
+        </td>
+        <td className="px-2">{priority}</td>
+        <td className="px-2">{datetime}</td>
+        <td className="px-2" title={`ID: ${task.responsible_user_id}`}>
+          {responsibleUserLogin}
+        </td>
+        <td className="px-2">{status}</td>
+      </tr>
+    </>
   )
 }

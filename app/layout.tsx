@@ -20,7 +20,10 @@ export default function RootLayout({
   return (
     <html lang="ru" className={clsx(['light', roboto.variable])}>
       <head />
-      <body>{children}</body>
+      <body>
+        <div id="modal-root"></div>
+        <div>{children}</div>
+      </body>
     </html>
   )
 }
