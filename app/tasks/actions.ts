@@ -81,3 +81,5 @@ export const getManagerTasks = cache(async (managerId: number) => {
     return null
   }
 })
+
+export const updateTask = async (taskId: number, taskObj: object) => {}

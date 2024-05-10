@@ -17,7 +17,6 @@ type Props = {
 
 export default function TaskRow({ task }: Props) {
   const [taskState, setTaskState] = useState<Task>(task)
-  const [taskOnEdit, setTaskOnEdit] = useState<Task | null>(null)
   const [showModal, setShowModal] = useState<boolean>(false)
   const priority = PRIORITIES[taskState.priority]
   const status = STATUSES[taskState.status]
@@ -28,13 +27,12 @@ export default function TaskRow({ task }: Props) {
   return (
     <>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <TaskForm task={taskOnEdit} />
+        <TaskForm task={taskState} />
       </Modal>
       <tr
         key={taskState.id}
         className="cursor-pointer duration-150 hover:bg-gray-50"
         onClick={() => {
-          setTaskOnEdit(taskState)
           setShowModal(true)
         }}
       >
