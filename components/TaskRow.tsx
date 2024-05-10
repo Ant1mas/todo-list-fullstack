@@ -36,6 +36,7 @@ export default function TaskRow({ task }: Props) {
       </Modal>
       <tr
         key={task.id}
+        className="cursor-pointer duration-150 hover:bg-gray-50"
         onClick={() => {
           setShowModal(true)
           console.log(`Clicked task id${task.id}`)
@@ -52,7 +53,7 @@ export default function TaskRow({ task }: Props) {
         >
           {task.title}
         </td>
-        <td className="px-2">{priority}</td>
+        <td className="px-2 py-1">{priority}</td>
         <td className="px-2">{datetime}</td>
         <td className="px-2" title={`ID: ${task.responsible_user_id}`}>
           {responsibleUserLogin}

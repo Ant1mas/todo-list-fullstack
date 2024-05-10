@@ -23,7 +23,7 @@ export default function Modal({ show = false, onClose, children }: Props) {
 
   const modalContent = show ? (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-center"
+      className="fixed inset-0 bg-black bg-opacity-20 z-40 flex justify-center items-center backdrop-blur-sm p-4"
       onClick={(e) => {
         e.stopPropagation()
         onClose()
