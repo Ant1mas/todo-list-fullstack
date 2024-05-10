@@ -13,9 +13,10 @@ import type { Task } from '@/app/tasks/types'
 
 type Props = {
   task: Task
+  userData?: object
 }
 
-export default function TaskRow({ task }: Props) {
+export default function TaskRow({ task, userData }: Props) {
   const [taskState, setTaskState] = useState<Task>(task)
   const [showModal, setShowModal] = useState<boolean>(false)
   const priority = PRIORITIES[taskState.priority]
@@ -27,7 +28,7 @@ export default function TaskRow({ task }: Props) {
   return (
     <>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <TaskForm task={taskState} />
+        <TaskForm task={taskState} userData={userData} />
       </Modal>
       <tr
         key={taskState.id}

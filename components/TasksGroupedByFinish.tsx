@@ -1,4 +1,5 @@
 import TaskRow from '@/components/TaskRow'
+import { getUserData } from '@/lib/dataAccessLayer'
 
 import type { Task } from '@/app/tasks/types'
 
@@ -17,7 +18,9 @@ const GROUPS_DICTIONARY: { [key: string]: string } = {
   future: 'На будущее',
 }
 
-export default function TasksGroupedByFinish({ tasks }: Props) {
+export default async function TasksGroupedByFinish({ tasks }: Props) {
+  const userData = await getUserData()
+
   return ORDER.map((group: string) => {
     return (
       <>
@@ -28,7 +31,7 @@ export default function TasksGroupedByFinish({ tasks }: Props) {
         </tr>
         {/* @ts-ignore */}
         {tasks[group]?.map((task: Task) => {
-          return <TaskRow task={task} />
+          return <TaskRow task={task} key={task.id} userData={userData} />
         })}
       </>
     )

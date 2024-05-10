@@ -82,4 +82,30 @@ export const getManagerTasks = cache(async (managerId: number) => {
   }
 })
 
+export const getTaskById = cache(async (taskId: number) => {
+  const session = await verifySession()
+  if (!session) return null
+  try {
+    const knex = getKnex()
+    const data = await knex('tasks')
+      .leftJoin('users as creator', 'tasks.created_by', 'creator.id')
+      .leftJoin(
+        'users as responsible',
+        'tasks.responsible_user_id',
+        'responsible.id',
+      )
+      .where('tasks.id', taskId)
+      .select(
+        'tasks.*',
+        'creator.login as creator_login',
+        'responsible.login as responsible_login',
+      )
+      .orderBy('updated_at', 'desc')
+    return data[0]
+  } catch (error) {
+    console.log('Failed to fetch task')
+    return null
+  }
+})
+
 export const updateTask = async (taskId: number, taskObj: object) => {}

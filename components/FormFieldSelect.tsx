@@ -10,6 +10,7 @@ type Props = {
     label: string
   }[]
   label?: string
+  [key: string]: any
 }
 
 export default function FormFieldSelect({
@@ -17,6 +18,7 @@ export default function FormFieldSelect({
   fieldName,
   options = [],
   label = '',
+  ...rest
 }: Props) {
   return (
     <>
@@ -34,9 +36,12 @@ export default function FormFieldSelect({
             ? 'border-red-500'
             : 'border-gray-500',
         )}
+        {...rest}
       >
         {options.map((option) => (
-          <option value={option.value}>{option.label}</option>
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
         ))}
       </select>
       <div className="ml-4 flex h-4 text-sm text-red-500">

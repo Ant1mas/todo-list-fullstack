@@ -14,7 +14,7 @@ export const groupTasks = (
     let groupedByDate: any = {
       today: [],
       week: [],
-      later: [],
+      future: [],
     }
     tasks.forEach((task: Task) => {
       const finishDate = new Date(task.finish_at)
@@ -25,7 +25,7 @@ export const groupTasks = (
       } else if (isThisWeek(finishDate)) {
         groupedByDate.week.push(task)
       } else {
-        groupedByDate.later.push(task)
+        groupedByDate.future.push(task)
       }
     })
     return groupedByDate

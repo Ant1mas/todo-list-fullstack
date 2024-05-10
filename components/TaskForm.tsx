@@ -1,7 +1,7 @@
 'use client'
 
 import { useFormik } from 'formik'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { updateTask } from '@/app/tasks/actions'
 import FormFieldInput from '@/components/FormFieldInput'
@@ -12,23 +12,28 @@ import {
   STATUS_SWITCH_OPTIONS,
 } from '@/lib/constants/tasks'
 import { dateToString } from '@/lib/functions/dateToString'
+import { getAllowedTaskFields } from '@/lib/functions/getAllowedTaskFields'
 import { toDateTimeLocal } from '@/lib/functions/toDateTimeLocal'
 
 import type { Task } from '@/app/tasks/types'
 
 type Props = {
   task: Task
+  userData?: object
   onUpdated?: () => any
 }
 
-export default function TaskForm({ task, onUpdated }: Props) {
+export default function TaskForm({ task, userData, onUpdated }: Props) {
   const [taskState, setTaskState] = useState<Task>(task)
-  const [loading, setLoading] = useState<boolean>(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const finishDate = toDateTimeLocal(new Date(taskState?.finish_at || ''))
   const createdAt = dateToString(new Date(taskState?.created_at || ''))
   const updatedAt = dateToString(new Date(taskState?.updated_at || ''))
+  const allowedFields = useMemo(
+    () => getAllowedTaskFields(taskState, userData),
+    [taskState, userData],
+  )
   const formik = useFormik({
     initialValues: {
       title: taskState.title,
@@ -69,6 +74,7 @@ export default function TaskForm({ task, onUpdated }: Props) {
           fieldType="text"
           placeholder="Заголовок"
           label="Заголовок"
+          disabled={!allowedFields.title}
         />
       </div>
       <div className="my-1">
@@ -78,6 +84,7 @@ export default function TaskForm({ task, onUpdated }: Props) {
           fieldType="text"
           placeholder="Описание"
           label="Описание"
+          disabled={!allowedFields.description}
         />
       </div>
       <div className="my-1">
@@ -87,6 +94,7 @@ export default function TaskForm({ task, onUpdated }: Props) {
           fieldType="text"
           placeholder="Ответственный"
           label="Ответственный"
+          disabled={!allowedFields.responsible}
         />
       </div>
       <div className="my-1">
@@ -95,6 +103,7 @@ export default function TaskForm({ task, onUpdated }: Props) {
           fieldName="priority"
           label="Приоритет"
           options={PRIORITY_SWITCH_OPTIONS}
+          disabled={!allowedFields.priority}
         />
       </div>
       <div className="my-1">
@@ -103,6 +112,7 @@ export default function TaskForm({ task, onUpdated }: Props) {
           fieldName="status"
           label="Статус"
           options={STATUS_SWITCH_OPTIONS}
+          disabled={!allowedFields.status}
         />
       </div>
       <div className="my-1">
@@ -112,6 +122,7 @@ export default function TaskForm({ task, onUpdated }: Props) {
           fieldType="datetime-local"
           placeholder="Дата окончания"
           label="Дата окончания"
+          disabled={!allowedFields.finishDate}
         />
       </div>
       <div className="mb-2">
@@ -133,13 +144,12 @@ export default function TaskForm({ task, onUpdated }: Props) {
         </div>
       )}
       <button
-        disabled={!!formik.isSubmitting || loading}
+        disabled={!!formik.isSubmitting}
         type="submit"
         className="mt-1 w-full rounded-3xl bg-green-500 px-4 py-2 text-white outline-none duration-150 hover:bg-green-600 focus:bg-green-600 disabled:bg-gray-400"
       >
-        {!formik.isSubmitting && !loading ? 'Обновить' : null}
+        {!formik.isSubmitting ? 'Обновить' : null}
         {formik.isSubmitting ? 'Выполняется...' : null}
-        {loading ? 'Загрузка...' : null}
       </button>
     </form>
   )

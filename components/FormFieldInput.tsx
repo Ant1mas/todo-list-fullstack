@@ -8,6 +8,7 @@ type Props = {
   fieldType?: string
   placeholder?: string
   label?: string
+  [key: string]: any
 }
 
 export default function FormFieldInput({
@@ -16,6 +17,7 @@ export default function FormFieldInput({
   fieldType = 'text',
   placeholder = '',
   label = '',
+  ...rest
 }: Props) {
   return (
     <>
@@ -35,6 +37,7 @@ export default function FormFieldInput({
             ? 'border-red-500'
             : 'border-gray-500',
         )}
+        {...rest}
       />
       <div className="ml-4 flex h-4 text-sm text-red-500">
         {formik.touched[fieldName] && formik.errors[fieldName] ? (
