@@ -44,17 +44,28 @@ export default function TaskForm({ task, userData, onUpdated }: Props) {
       finishDate: finishDate,
     },
     validationSchema: schemaTaskData,
-    onSubmit: async () => {
+    onSubmit: async (values) => {
       try {
         setSuccessMessage(null)
         setErrorMessage(null)
-        await updateTask(taskState?.id || 0, taskState || {}).then(() => {
+        await updateTask(taskState?.id || 0, values).then(() => {
           setSuccessMessage('Данные успешно обновлены!')
         })
       } catch (error) {
+        console.log('error', error)
         if (error?.toString() === 'Error: Validation Error') {
           setErrorMessage(
             'Указаны неверные данные. Пожалуйста проверьте данные.',
+          )
+        } else if (
+          error?.toString() === 'Error: Error of getting responsible user data'
+        ) {
+          setErrorMessage(
+            'Не удалось обновить данные. Нельзя указать ответственным этого пользователя.',
+          )
+        } else if (error?.toString() === 'Error: Wrong responsible user') {
+          setErrorMessage(
+            'Не удалось обновить данные. Можно указать ответственным только своего подчиненного.',
           )
         } else {
           setErrorMessage(
@@ -133,16 +144,18 @@ export default function TaskForm({ task, userData, onUpdated }: Props) {
         <div>Дата создания: {createdAt}</div>
         <div>Дата обновления: {updatedAt}</div>
       </div>
-      {successMessage && (
-        <div className="my-1 flex justify-center text-center text-green-500">
-          {successMessage}
-        </div>
-      )}
-      {errorMessage && (
-        <div className="my-1 flex justify-center text-center text-red-500">
-          {errorMessage}
-        </div>
-      )}
+      <div className="max-w-72">
+        {successMessage && (
+          <div className="my-1 flex justify-center text-center text-green-500">
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="my-1 flex justify-center text-center text-red-500">
+            {errorMessage}
+          </div>
+        )}
+      </div>
       <button
         disabled={!!formik.isSubmitting}
         type="submit"

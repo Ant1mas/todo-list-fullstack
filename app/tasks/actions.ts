@@ -2,7 +2,10 @@
 
 import { cache } from 'react'
 
-import { verifySession } from '@/lib/dataAccessLayer'
+import { getUserByLogin } from '@/lib/actions/users'
+import { schemaTaskData } from '@/lib/config/yup/taskData'
+import { getUserData, verifySession } from '@/lib/dataAccessLayer'
+import { getAllowedTaskFields } from '@/lib/functions/getAllowedTaskFields'
 import { getKnex } from '@/lib/knex'
 
 export const getAllTasks = cache(async () => {
@@ -108,4 +111,79 @@ export const getTaskById = cache(async (taskId: number) => {
   }
 })
 
-export const updateTask = async (taskId: number, taskObj: object) => {}
+export const updateTask = async (taskId: number, taskObj: any) => {
+  const session = await verifySession()
+  if (!session) return null
+  let userData: any = {}
+  let responsibleUserData: any = {}
+  let taskDataDb: any = {}
+  let allowedFields: any = {}
+  // Validate fields
+  try {
+    await schemaTaskData.validate(taskObj)
+  } catch (error) {
+    throw new Error('Validation Error')
+  }
+  // Get users data
+  try {
+    userData = await getUserData()
+  } catch (error) {
+    throw new Error('Error of getting user data')
+  }
+  // Get responsible user data
+  try {
+    responsibleUserData = await getUserByLogin(taskObj.responsible)
+    if (!responsibleUserData) {
+      throw new Error('Error of getting responsible user data')
+    }
+  } catch (error) {
+    throw new Error('Error of getting responsible user data')
+  }
+  // Get task data
+  try {
+    taskDataDb = await getTaskById(taskId)
+  } catch (error) {
+    throw new Error('Error of getting task data')
+  }
+  // Get allowed fields
+  allowedFields = getAllowedTaskFields(taskDataDb, userData)
+  // Check manager assignments
+  try {
+    const userData = await getUserData()
+    if (userData.manager_id === null) {
+      if (responsibleUserData.manager_id !== userData.id) {
+        throw new Error('Wrong responsible user')
+      }
+    }
+  } catch (error) {
+    throw new Error('Wrong responsible user')
+  }
+  try {
+    const knex = getKnex()
+    await knex('tasks')
+      .where('id', taskId)
+      .update({
+        title: allowedFields.title ? taskObj.title : taskDataDb.title,
+        description: allowedFields.description
+          ? taskObj.description
+          : taskDataDb.description,
+        responsible_user_id: allowedFields.responsible
+          ? responsibleUserData.id
+          : taskDataDb.responsible_user_id,
+        priority: allowedFields.priority
+          ? taskObj.priority
+          : taskDataDb.priority,
+        status: allowedFields.status ? taskObj.status : taskDataDb.status,
+        finish_at: allowedFields.finishDate
+          ? new Date(taskObj.finishDate)
+          : taskDataDb.finish_at,
+        updated_at: new Date(),
+      })
+      .then((numberOfUpdatedRows: number) => {
+        return numberOfUpdatedRows
+      })
+  } catch (error) {
+    console.log('Failed to update task')
+    return null
+  }
+}
