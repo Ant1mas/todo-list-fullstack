@@ -1,5 +1,6 @@
 import { getAllTasks } from '@/app/tasks/actions'
 import TasksContainer from '@/components/TasksContainer'
+import { getSubordinatesById } from '@/lib/actions/users'
 import { getUserData } from '@/lib/dataAccessLayer'
 
 import type { Task } from '@/app/tasks/types'
@@ -7,6 +8,7 @@ import type { Task } from '@/app/tasks/types'
 export default async function TasksTable() {
   const tasks: Task[] = await getAllTasks()
   const userData = await getUserData()
+  const subordinates = (await getSubordinatesById(userData.id)) || []
 
   if (tasks.length < 1) {
     return <div>Задач нет</div>
@@ -24,7 +26,11 @@ export default async function TasksTable() {
         </tr>
       </thead>
       <tbody>
-        <TasksContainer tasks={tasks} userData={userData} />
+        <TasksContainer
+          tasks={tasks}
+          userData={userData}
+          subordinates={subordinates}
+        />
       </tbody>
     </table>
   )

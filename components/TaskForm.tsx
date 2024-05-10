@@ -1,6 +1,7 @@
 'use client'
 
 import { useFormik } from 'formik'
+import { observer } from 'mobx-react-lite'
 import { useMemo, useState } from 'react'
 
 import { createNewTask, updateTask } from '@/app/tasks/actions'
@@ -23,7 +24,7 @@ type Props = {
   onUpdate?: (newState: Task) => any
 }
 
-export default function TaskForm({ task, onUpdate }: Props) {
+export default observer(function TaskForm({ task, onUpdate }: Props) {
   const [taskState, setTaskState] = useState<Task>(task)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -225,4 +226,4 @@ export default function TaskForm({ task, onUpdate }: Props) {
       </button>
     </form>
   )
-}
+})

@@ -1,7 +1,7 @@
 'use client'
 
 import { observer } from 'mobx-react-lite'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import TasksGroupedByFinish from '@/components/TasksGroupedByFinish'
 import TasksGroupedByResponsibleUser from '@/components/TasksGroupedByResponsibleUser'
@@ -15,31 +15,45 @@ import type { Task } from '@/app/tasks/types'
 type Props = {
   tasks: Task[]
   userData: any
+  subordinates: any
 }
 
-export default observer(function TasksContainer({ tasks, userData }: Props) {
+export default observer(function TasksContainer({
+  tasks,
+  userData,
+  subordinates,
+}: Props) {
   const searchParams = useSearchParams()
   const groupBy = searchParams.get('groupBy')
-  const [tasksState, setTasksState] = useState<Task[]>(tasks)
-  const tasksGroupedByFinishDate = useMemo(() => {
-    // TODO: Filter only my tasks
-    //
-    return groupTasks(tasksState, 'byFinishDate')
-  }, [tasksState])
-  const tasksGroupedByResponsibleUser = useMemo(() => {
-    // TODO: Filter only tasks with my workers
-    //
-    return groupTasks(tasksState, 'byResponsibleUser')
-  }, [tasksState])
   const mobxStore: any = useMobxStore()
+  const tasksGroupedByFinishDate = useMemo(() => {
+    const filteredTasks = mobxStore.tasks.filter(
+      (task: Task) => task.responsible_user_id === userData.id,
+    )
+    return groupTasks(filteredTasks, 'byFinishDate')
+  }, [mobxStore.tasks])
+  const tasksGroupedByResponsibleUser = useMemo(() => {
+    let subordinatesId = new Set()
+    subordinates.forEach((subordinate: any) => {
+      subordinatesId.add(subordinate.id)
+    })
+    const filteredTasks = mobxStore.tasks.filter((task: Task) =>
+      subordinatesId.has(task.responsible_user_id),
+    )
+    return groupTasks(filteredTasks, 'byResponsibleUser')
+  }, [mobxStore.tasks])
 
   useEffect(() => {
-    mobxStore.userData = userData
+    mobxStore.setUserData(userData)
   }, [userData])
 
   useEffect(() => {
-    mobxStore.tasks = tasks
+    mobxStore.setTasks(tasks)
   }, [tasks])
+
+  useEffect(() => {
+    mobxStore.setSubordinatesData(subordinates)
+  }, [subordinates])
 
   if (groupBy === 'byFinishDate') {
     return <TasksGroupedByFinish tasks={tasksGroupedByFinishDate} />
@@ -51,5 +65,5 @@ export default observer(function TasksContainer({ tasks, userData }: Props) {
     )
   }
 
-  return <TasksUngrouped tasks={tasksState} />
+  return <TasksUngrouped tasks={mobxStore.tasks} />
 })

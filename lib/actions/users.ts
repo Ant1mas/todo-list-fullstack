@@ -33,3 +33,19 @@ export const getUserByLogin = cache(async (userLogin: number) => {
     return null
   }
 })
+
+export const getSubordinatesById = cache(async (userId: number) => {
+  const session = await verifySession()
+  if (!session) return null
+  try {
+    const knex = getKnex()
+    const users = await knex('users').where('manager_id', userId)
+    if (users.length < 1) {
+      throw new Error('Users not found')
+    }
+    return users
+  } catch (error) {
+    console.log('Failed to fetch user')
+    return null
+  }
+})
