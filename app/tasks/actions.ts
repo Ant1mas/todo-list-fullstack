@@ -189,3 +189,28 @@ export const updateTask = async (taskId: number, taskObj: any) => {
     return null
   }
 }
+
+export const createNewTask = async (taskObj: any) => {
+  const session = await verifySession()
+  if (!session) return null
+  try {
+    const knex = getKnex()
+    const data = await knex('tasks')
+    // .leftJoin('users as creator', 'tasks.created_by', 'creator.id')
+    // .leftJoin(
+    //   'users as responsible',
+    //   'tasks.responsible_user_id',
+    //   'responsible.id',
+    // )
+    // .where('tasks.id', taskId)
+    // .select(
+    //   'tasks.*',
+    //   'creator.login as creator_login',
+    //   'responsible.login as responsible_login',
+    // )
+    // .orderBy('updated_at', 'desc')
+  } catch (error) {
+    console.log('Failed to create task')
+    return null
+  }
+}

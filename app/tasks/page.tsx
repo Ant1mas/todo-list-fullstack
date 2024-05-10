@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 
 import { getAllTasks, getManagerTasks, getUserTasks } from '@/app/tasks/actions'
+import ButtonAddNewTask from '@/components/ButtonAddNewTask'
 import DataGroupButtons from '@/components/DataGroupButtons'
 import TasksList from '@/components/TasksList'
 import { getUserData, verifySession } from '@/lib/dataAccessLayer'
@@ -47,9 +48,7 @@ export default async function page({ searchParams }: Props) {
         />
       </div>
       <div className="my-4 w-full">
-        <button className="w-full bg-blue-400 text-white uppercase text-sm px-10 py-3 rounded-2xl duration-150 hover:bg-blue-500">
-          Добавить новую задачу
-        </button>
+        <ButtonAddNewTask userData={userData} />
       </div>
       <TasksList tasks={tasks} groupBy={groupBy} />
     </div>
