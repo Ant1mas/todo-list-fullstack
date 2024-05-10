@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { cache } from 'react'
 
 import { getUserByLogin } from '@/lib/actions/users'
@@ -180,6 +181,7 @@ export const updateTask = async (taskId: number, taskObj: any) => {
         updated_at: new Date(),
       })
       .then((numberOfUpdatedRows: number) => {
+        revalidatePath('/tasks')
         return numberOfUpdatedRows
       })
   } catch (error) {
