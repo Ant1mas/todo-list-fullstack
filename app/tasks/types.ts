@@ -9,6 +9,7 @@ export type Task = {
   status: 'to do' | 'done' | 'in progress' | 'canceled'
   created_by: number
   responsible_user_id: number
+  login: string
 }
 
 export type GroupBy =

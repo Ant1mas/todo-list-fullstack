@@ -33,10 +33,10 @@ export const groupTasks = (
   if (groupBy === 'byResponsibleUser') {
     let groupedResponsibleUser: any = {}
     tasks.forEach((task: Task) => {
-      if (!groupedResponsibleUser[task.responsible_user_id]) {
-        groupedResponsibleUser[task.responsible_user_id] = []
+      if (!groupedResponsibleUser[task.login]) {
+        groupedResponsibleUser[task.login] = []
       }
-      groupedResponsibleUser[task.responsible_user_id].push(task)
+      groupedResponsibleUser[task.login].push(task)
     })
     return groupedResponsibleUser
   }
