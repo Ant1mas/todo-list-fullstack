@@ -20,10 +20,10 @@ import type { Task } from '@/app/tasks/types'
 type Props = {
   task: Task
   userData?: object
-  onUpdated?: () => any
+  onUpdate?: (newState: Task) => any
 }
 
-export default function TaskForm({ task, userData, onUpdated }: Props) {
+export default function TaskForm({ task, userData, onUpdate }: Props) {
   const [taskState, setTaskState] = useState<Task>(task)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -50,9 +50,20 @@ export default function TaskForm({ task, userData, onUpdated }: Props) {
         setErrorMessage(null)
         await updateTask(taskState?.id || 0, values).then(() => {
           setSuccessMessage('Данные успешно обновлены!')
+          if (onUpdate) {
+            onUpdate({
+              ...taskState,
+              title: values.title,
+              description: values.description,
+              responsible_login: values.responsible,
+              priority: values.priority,
+              status: values.status,
+              finish_at: new Date(values.finishDate).toString(),
+              updated_at: new Date().toString(),
+            })
+          }
         })
       } catch (error) {
-        console.log('error', error)
         if (error?.toString() === 'Error: Validation Error') {
           setErrorMessage(
             'Указаны неверные данные. Пожалуйста проверьте данные.',

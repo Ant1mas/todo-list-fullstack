@@ -28,7 +28,13 @@ export default function TaskRow({ task, userData }: Props) {
   return (
     <>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <TaskForm task={taskState} userData={userData} />
+        <TaskForm
+          task={taskState}
+          userData={userData}
+          onUpdate={(updatedState) => {
+            setTaskState(updatedState)
+          }}
+        />
       </Modal>
       <tr
         key={taskState.id}
