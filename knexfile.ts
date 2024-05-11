@@ -11,10 +11,10 @@ const config = {
     database: process.env.POSTGRES_DATABASE,
   },
   migrations: {
-    directory: './lib/knex/migrations',
+    directory: './lib/config/knex/migrations',
   },
   seeds: {
-    directory: './lib/knex/seeds',
+    directory: './lib/config/knex/seeds',
   },
 }
 

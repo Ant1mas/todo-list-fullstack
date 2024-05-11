@@ -48,5 +48,14 @@ export async function seed(knex: Knex): Promise<void> {
       password: '$2y$10$R.oU6rb.QE3XWn/sv6RYgORnRBgNRLXlsfsxjGZnKCTAqLv7Fwdbe', // user5
       manager_id: 2,
     },
+    {
+      id: 6,
+      name: 'name6',
+      last_name: 'last_name6',
+      middle_name: 'middle_name6',
+      login: 'user6',
+      password: '$2y$10$6FqM0IEkKYz4BKH9AzDYS.mABAGmPm/kIvp13gcmJLCWu3JNTWUAO', // user6
+      manager_id: 2,
+    },
   ])
 }
