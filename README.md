@@ -58,6 +58,8 @@ yarn knex seed:run
 # Запуск в режиме разработки
 yarn dev
 # Или сборка проекта
+# Закомментировать строку `output: 'standalone'` в файле `next.config.js`
+# Выполнить команды
 yarn build
 yarn start
 ```
@@ -74,3 +76,14 @@ yarn start
 | user4 | user4  |
 | user5 | user5  |
 | user6 | user6  |
+
+## Docker
+
+Для сборки Docker Image выполнить команду ниже
+
+```bash
+docker build --pull --rm -f "Dockerfile" -t todo-list-app:latest "."
+```
+
+Затем можно запускать контейнер из этого образа,
+указав правильные данные переменных **ENV** как в файле `.env`
