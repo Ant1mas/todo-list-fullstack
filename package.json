@@ -1,4 +1,7 @@
 {
+  "name": "todo-list-app",
+  "version": "0.0.1",
+  "author": "Anton Moskovskii <ant1mas.dev@gmail.com> (https://github.com/Ant1mas)",
   "private": true,
   "scripts": {
     "dev": "next dev",

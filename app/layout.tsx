@@ -10,7 +10,7 @@ import '@/styles/globals.css'
 const colorPrimary = pwaManifest.theme_color
 
 export const metadata: Metadata = {
-  title: 'Тестовое задание от Московского Антона для ESoft <3',
+  title: 'TODO list. Тестовое задание от Московского Антона для ESoft <3',
   ...DEFAULT_METADATA,
 }
 
