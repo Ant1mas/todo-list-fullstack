@@ -15,23 +15,25 @@ export default async function TasksTable() {
   }
 
   return (
-    <table className="my-4 w-full">
-      <thead>
-        <tr className="text-left">
-          <th className="px-2">Заголовок</th>
-          <th className="px-2">Приоритет</th>
-          <th className="px-2">Дата окончания</th>
-          <th className="px-2">Ответственный</th>
-          <th className="px-2">Статус</th>
-        </tr>
-      </thead>
-      <tbody>
-        <TasksContainer
-          tasks={tasks}
-          userData={userData}
-          subordinates={subordinates}
-        />
-      </tbody>
-    </table>
+    <div className="my-4 w-full overflow-x-auto rounded-2xl bg-slate-50 p-5">
+      <table className="w-full">
+        <thead>
+          <tr className="text-left">
+            <th className="px-2">Заголовок</th>
+            <th className="px-2">Приоритет</th>
+            <th className="px-2">Дата окончания</th>
+            <th className="px-2">Ответственный</th>
+            <th className="px-2">Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          <TasksContainer
+            tasks={tasks}
+            userData={userData}
+            subordinates={subordinates}
+          />
+        </tbody>
+      </table>
+    </div>
   )
 }

@@ -30,7 +30,7 @@ export default function TaskRow({ task }: Props) {
       </Modal>
       <tr
         key={task.id}
-        className="cursor-pointer duration-150 hover:bg-gray-50"
+        className="cursor-pointer duration-150 hover:bg-white"
         onClick={() => {
           setShowModal(true)
         }}
@@ -38,9 +38,9 @@ export default function TaskRow({ task }: Props) {
         <td
           className={clsx(
             'px-2',
-            taskColor === 'gray' ? 'bg-gray-200' : null,
-            taskColor === 'green' ? 'bg-green-200' : null,
-            taskColor === 'red' ? 'bg-red-200' : null,
+            taskColor === 'gray' ? 'bg-gray-300' : null,
+            taskColor === 'green' ? 'bg-green-300' : null,
+            taskColor === 'red' ? 'bg-red-300' : null,
           )}
         >
           {task.title}
