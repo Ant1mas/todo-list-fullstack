@@ -5,7 +5,6 @@ export async function seed(knex: Knex): Promise<void> {
   await knex('tasks').del()
   await knex('tasks').insert([
     {
-      id: 1,
       title: 'Task 1',
       description: 'Description for task 1',
       finish_at: '2024-05-07 18:01:01.123456',
@@ -17,7 +16,6 @@ export async function seed(knex: Knex): Promise<void> {
       responsible_user_id: 3,
     },
     {
-      id: 2,
       title: 'Task 2',
       description: 'Description for task 2',
       finish_at: '2024-05-07 18:01:01.123456',
@@ -29,7 +27,6 @@ export async function seed(knex: Knex): Promise<void> {
       responsible_user_id: 5,
     },
     {
-      id: 3,
       title: 'Task 3',
       description: 'Description for task 3',
       finish_at: '2024-05-07 18:01:01.123456',
@@ -41,7 +38,6 @@ export async function seed(knex: Knex): Promise<void> {
       responsible_user_id: 4,
     },
     {
-      id: 4,
       title: 'Task 4',
       description: 'Description for task 4',
       finish_at: '2024-05-20 18:04:04.123456',
@@ -53,7 +49,6 @@ export async function seed(knex: Knex): Promise<void> {
       responsible_user_id: 4,
     },
     {
-      id: 5,
       title: 'Task 5',
       description: 'Description for task 5',
       finish_at: '2036-05-20 18:04:04.123456',
@@ -65,7 +60,6 @@ export async function seed(knex: Knex): Promise<void> {
       responsible_user_id: 5,
     },
     {
-      id: 6,
       title: 'Task 6',
       description: 'Description for task 6',
       finish_at: '2036-05-20 18:04:04.123456',
@@ -77,7 +71,6 @@ export async function seed(knex: Knex): Promise<void> {
       responsible_user_id: 3,
     },
     {
-      id: 7,
       title: 'Task 7',
       description: 'Description for task 7',
       finish_at: '2036-05-20 18:04:04.123456',
@@ -89,7 +82,6 @@ export async function seed(knex: Knex): Promise<void> {
       responsible_user_id: 2,
     },
     {
-      id: 8,
       title: 'Task 8',
       description: 'Description for task 8',
       finish_at: '2036-05-20 18:04:04.123456',
@@ -101,7 +93,6 @@ export async function seed(knex: Knex): Promise<void> {
       responsible_user_id: 1,
     },
     {
-      id: 9,
       title: 'Task 9',
       description: 'Description for task 9',
       finish_at: '2036-05-20 18:04:04.123456',

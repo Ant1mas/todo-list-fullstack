@@ -21,6 +21,16 @@ export const getAllowedTaskFields = (
     status: false,
     finishDate: false,
   }
+  if (taskData.id === 0) {
+    return {
+      title: true,
+      description: true,
+      responsible: true,
+      priority: true,
+      status: true,
+      finishDate: true,
+    }
+  }
   if (userData.manager_id === null) {
     allowedFields = {
       title: true,

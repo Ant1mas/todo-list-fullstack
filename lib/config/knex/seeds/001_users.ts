@@ -4,7 +4,6 @@ export async function seed(knex: Knex): Promise<void> {
   await knex('users').del()
   await knex('users').insert([
     {
-      id: 1,
       name: 'name1',
       last_name: 'last_name1',
       middle_name: 'middle_name1',
@@ -13,7 +12,6 @@ export async function seed(knex: Knex): Promise<void> {
       manager_id: null,
     },
     {
-      id: 2,
       name: 'name2',
       last_name: 'last_name2',
       middle_name: 'middle_name2',
@@ -22,7 +20,6 @@ export async function seed(knex: Knex): Promise<void> {
       manager_id: null,
     },
     {
-      id: 3,
       name: 'name3',
       last_name: 'last_name3',
       middle_name: 'middle_name3',
@@ -31,7 +28,6 @@ export async function seed(knex: Knex): Promise<void> {
       manager_id: 1,
     },
     {
-      id: 4,
       name: 'name4',
       last_name: 'last_name4',
       middle_name: 'middle_name4',
@@ -40,7 +36,6 @@ export async function seed(knex: Knex): Promise<void> {
       manager_id: 1,
     },
     {
-      id: 5,
       name: 'name5',
       last_name: 'last_name5',
       middle_name: 'middle_name5',
@@ -49,7 +44,6 @@ export async function seed(knex: Knex): Promise<void> {
       manager_id: 2,
     },
     {
-      id: 6,
       name: 'name6',
       last_name: 'last_name6',
       middle_name: 'middle_name6',
