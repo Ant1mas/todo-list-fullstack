@@ -23,7 +23,7 @@ export default function Modal({ show = false, onClose, children }: Props) {
 
   const modalContent = show ? (
     <div
-      className="fixed grid inset-0 bg-black bg-opacity-20 z-40 overflow-y-auto backdrop-blur-sm"
+      className="fixed inset-0 z-40 grid overflow-y-auto bg-black bg-opacity-20 backdrop-blur-sm"
       onClick={(e) => {
         e.stopPropagation()
         onClose()
@@ -31,7 +31,7 @@ export default function Modal({ show = false, onClose, children }: Props) {
     >
       <div className="flex items-center justify-center">
         <div
-          className="bg-white p-5 rounded-lg shadow-xl m-4"
+          className="m-4 rounded-lg bg-white p-5 shadow-xl"
           onClick={(e) => {
             e.stopPropagation()
           }}
@@ -40,7 +40,7 @@ export default function Modal({ show = false, onClose, children }: Props) {
           <div className="flex justify-end">
             <button
               onClick={handleCloseClick}
-              className="bg-blue-500 hover:bg-blue-700 mt-3 text-white text-sm uppercase py-2 px-4 rounded-xl"
+              className="mt-3 rounded-xl bg-blue-500 px-4 py-2 text-sm uppercase text-white hover:bg-blue-700"
             >
               Закрыть
             </button>

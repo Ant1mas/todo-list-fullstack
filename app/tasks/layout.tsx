@@ -17,10 +17,10 @@ export default async function layout({
 
   return (
     <div className="flex flex-col items-center">
-      <header className="h-10 p-2 w-full inline-flex items-center justify-end gap-2">
+      <header className="inline-flex h-10 w-full items-center justify-end gap-2 p-2">
         <div>Привет, {userData.login}</div>
         <Link href="/profile">
-          <button className="px-4 py-2 bg-slate-200 uppercase text-sm text-gray-800 rounded-2xl duration-150 hover:bg-slate-300">
+          <button className="rounded-2xl bg-slate-200 px-4 py-2 text-sm uppercase text-gray-800 duration-150 hover:bg-slate-300">
             Профиль
           </button>
         </Link>

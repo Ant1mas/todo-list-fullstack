@@ -5,8 +5,8 @@ import { createMobxStore } from '@/lib/config/mobx/MobxStore'
 
 const Context: any = createContext(null)
 
-export const MobxProvider = observer(({ children, ...props }: any) => {
-  const store = useLocalObservable(() => createMobxStore(props))
+export const MobxProvider = observer(({ children }: any) => {
+  const store = useLocalObservable(() => createMobxStore())
   return <Context.Provider value={store}>{children}</Context.Provider>
 })
 

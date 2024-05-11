@@ -26,7 +26,7 @@ export default function TasksGroupedByFinish({ tasks }: Props) {
     return (
       <React.Fragment key={group}>
         <tr>
-          <td colSpan={5} className="text-center font-bold pt-3">
+          <td colSpan={5} className="pt-3 text-center font-bold">
             {GROUPS_DICTIONARY[group]}
           </td>
         </tr>

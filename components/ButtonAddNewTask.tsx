@@ -17,7 +17,7 @@ export default function ButtonAddNewTask({}: Props) {
         <TaskForm task={DEFAULT_NEW_TASK} />
       </Modal>
       <button
-        className="w-full bg-blue-400 text-white uppercase text-sm px-10 py-3 rounded-2xl duration-150 hover:bg-blue-500"
+        className="w-full rounded-2xl bg-blue-400 px-10 py-3 text-sm uppercase text-white duration-150 hover:bg-blue-500 "
         onClick={() => {
           setShowModal(true)
         }}

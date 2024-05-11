@@ -13,8 +13,8 @@ export default async function page({}: Props) {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center p-5 min-h-screen">
-      <h2 className="text-2xl pb-4 uppercase font-light">Авторизация</h2>
+    <div className="flex min-h-screen flex-col items-center justify-center p-5">
+      <h2 className="pb-4 text-2xl font-light uppercase">Авторизация</h2>
       <LoginForm />
     </div>
   )

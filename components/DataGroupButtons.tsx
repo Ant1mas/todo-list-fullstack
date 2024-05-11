@@ -13,13 +13,13 @@ export default function DataGroupButtons({
   isManager = false,
 }: Props) {
   return (
-    <div className="flex gap-4 items-center flex-wrap">
+    <div className="flex flex-wrap items-center gap-4">
       <span>Группировать:</span>
       <Link href="?groupBy=noGroup">
         <button
           className={clsx(
-            'bg-slate-200 text-gray-900 uppercase text-sm px-4 py-2 rounded-xl duration-150 hover:bg-slate-300',
-            groupBy === 'noGroup' ? 'bg-slate-300 cursor-default' : null,
+            'rounded-xl bg-slate-200 px-4 py-2 text-sm uppercase text-gray-900 duration-150 hover:bg-slate-300',
+            groupBy === 'noGroup' ? 'cursor-default bg-slate-300' : null,
           )}
         >
           Без группировки
@@ -28,8 +28,8 @@ export default function DataGroupButtons({
       <Link href="?groupBy=byFinishDate">
         <button
           className={clsx(
-            'bg-slate-200 text-gray-900 uppercase text-sm px-4 py-2 rounded-xl duration-150 hover:bg-slate-300',
-            groupBy === 'byFinishDate' ? 'bg-slate-300 cursor-default' : null,
+            'rounded-xl bg-slate-200 px-4 py-2 text-sm uppercase text-gray-900 duration-150 hover:bg-slate-300',
+            groupBy === 'byFinishDate' ? 'cursor-default bg-slate-300' : null,
           )}
         >
           Дата завершения
@@ -39,9 +39,9 @@ export default function DataGroupButtons({
         <Link href="?groupBy=byResponsibleUser">
           <button
             className={clsx(
-              'bg-slate-200 text-gray-900 uppercase text-sm px-4 py-2 rounded-xl duration-150 hover:bg-slate-300',
+              'rounded-xl bg-slate-200 px-4 py-2 text-sm uppercase text-gray-900 duration-150 hover:bg-slate-300',
               groupBy === 'byResponsibleUser'
-                ? 'bg-slate-300 cursor-default'
+                ? 'cursor-default bg-slate-300'
                 : null,
             )}
           >

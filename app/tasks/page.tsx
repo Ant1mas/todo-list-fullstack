@@ -24,7 +24,7 @@ export default async function page({ searchParams }: Props) {
 
   return (
     <div className="flex flex-col items-center p-5">
-      <h2 className="text-2xl pb-4 uppercase font-light">Задачи</h2>
+      <h2 className="pb-4 text-2xl font-light uppercase">Задачи</h2>
       <div className="flex w-full">
         <DataGroupButtons
           groupBy={groupBy}

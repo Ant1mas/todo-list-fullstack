@@ -14,7 +14,7 @@ export default function TasksGroupedByResponsibleUser({ tasks }: Props) {
   return Object.keys(tasks).map((responsibleUser) => (
     <React.Fragment key={responsibleUser}>
       <tr>
-        <td colSpan={5} className="text-center font-bold pt-3">
+        <td colSpan={5} className="pt-3 text-center font-bold">
           {responsibleUser}
         </td>
       </tr>

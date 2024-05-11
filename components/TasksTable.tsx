@@ -15,7 +15,7 @@ export default async function TasksTable() {
   }
 
   return (
-    <table className="w-full my-4">
+    <table className="my-4 w-full">
       <thead>
         <tr className="text-left">
           <th className="px-2">Заголовок</th>
