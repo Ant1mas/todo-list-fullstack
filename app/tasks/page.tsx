@@ -32,7 +32,7 @@ export default async function page({ searchParams }: Props) {
         />
       </div>
       <div className="my-4 w-full">
-        <ButtonAddNewTask userData={userData} />
+        <ButtonAddNewTask />
       </div>
       <TasksTable />
     </div>

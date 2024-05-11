@@ -28,8 +28,7 @@ export const getAllTasks = cache(async () => {
       .orderBy('updated_at', 'desc')
     return data
   } catch (error) {
-    console.log('Failed to fetch tasks')
-    return null
+    throw new Error('Failed to fetch task')
   }
 })
 
@@ -54,8 +53,7 @@ export const getUserTasks = cache(async (userId: number) => {
       .orderBy('updated_at', 'desc')
     return data
   } catch (error) {
-    console.log('Failed to fetch tasks')
-    return null
+    throw new Error('Failed to fetch task')
   }
 })
 
@@ -80,8 +78,7 @@ export const getManagerTasks = cache(async (managerId: number) => {
       .orderBy('updated_at', 'desc')
     return data
   } catch (error) {
-    console.log('Failed to fetch tasks')
-    return null
+    throw new Error('Failed to fetch task')
   }
 })
 
@@ -106,8 +103,7 @@ export const getTaskById = cache(async (taskId: number) => {
       .orderBy('updated_at', 'desc')
     return data[0]
   } catch (error) {
-    console.log('Failed to fetch task')
-    return null
+    throw new Error('Failed to fetch task')
   }
 })
 
@@ -188,32 +184,70 @@ export const updateTask = async (taskId: number, taskObj: any) => {
       })
     return result
   } catch (error) {
-    console.log('Failed to update task')
-    return null
+    throw new Error('Failed to update task')
   }
 }
 
 export const createNewTask = async (taskObj: any) => {
   const session = await verifySession()
   if (!session) return null
+  let userData: any = {}
+  let responsibleUserData: any = {}
+  // Validate fields
+  try {
+    await schemaTaskData.validate(taskObj)
+  } catch (error) {
+    throw new Error('Validation Error')
+  }
+  // Get users data
+  try {
+    userData = await getUserData()
+  } catch (error) {
+    throw new Error('Error of getting user data')
+  }
+  // Get responsible user data
+  try {
+    responsibleUserData = await getUserByLogin(taskObj.responsible)
+    if (!responsibleUserData) {
+      throw new Error('Error of getting responsible user data')
+    }
+  } catch (error) {
+    throw new Error('Error of getting responsible user data')
+  }
+  // Check assigned responsible user
+  if (taskObj.responsible !== userData.login) {
+    if (
+      userData.manager_id !== null ||
+      responsibleUserData.manager_id !== userData.id
+    ) {
+      throw new Error('Wrong responsible user')
+    }
+  }
+  const newObject = {
+    title: taskObj.title,
+    description: taskObj.description,
+    responsible_user_id: responsibleUserData.id,
+    priority: taskObj.priority,
+    status: taskObj.status,
+    finish_at: new Date(taskObj.finishDate),
+    updated_at: new Date(),
+    created_by: userData.id,
+  }
   try {
     const knex = getKnex()
-    const data = await knex('tasks')
-    // .leftJoin('users as creator', 'tasks.created_by', 'creator.id')
-    // .leftJoin(
-    //   'users as responsible',
-    //   'tasks.responsible_user_id',
-    //   'responsible.id',
-    // )
-    // .where('tasks.id', taskId)
-    // .select(
-    //   'tasks.*',
-    //   'creator.login as creator_login',
-    //   'responsible.login as responsible_login',
-    // )
-    // .orderBy('updated_at', 'desc')
+    const result = await knex('tasks')
+      .insert(newObject)
+      .returning(['id', 'created_at'])
+    return {
+      data: {
+        ...newObject,
+        id: result[0].id,
+        created_at: result[0].created_at,
+        responsible_login: taskObj.responsible,
+        creator_login: userData.login,
+      },
+    }
   } catch (error) {
-    console.log('Failed to create task')
-    return null
+    throw new Error('Failed to create task')
   }
 }

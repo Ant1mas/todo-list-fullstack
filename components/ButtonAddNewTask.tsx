@@ -6,17 +6,15 @@ import Modal from '@/components/Modal'
 import TaskForm from '@/components/TaskForm'
 import { DEFAULT_NEW_TASK } from '@/lib/constants/tasks'
 
-type Props = {
-  userData?: object
-}
+type Props = {}
 
-export default function ButtonAddNewTask({ userData }: Props) {
+export default function ButtonAddNewTask({}: Props) {
   const [showModal, setShowModal] = useState<boolean>(false)
 
   return (
     <>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <TaskForm task={DEFAULT_NEW_TASK} userData={userData} />
+        <TaskForm task={DEFAULT_NEW_TASK} />
       </Modal>
       <button
         className="w-full bg-blue-400 text-white uppercase text-sm px-10 py-3 rounded-2xl duration-150 hover:bg-blue-500"

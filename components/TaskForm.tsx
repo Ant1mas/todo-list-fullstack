@@ -4,7 +4,7 @@ import { useFormik } from 'formik'
 import { observer } from 'mobx-react-lite'
 import { useMemo, useState } from 'react'
 
-import { updateTask } from '@/app/tasks/actions'
+import { createNewTask, updateTask } from '@/app/tasks/actions'
 import FormFieldInput from '@/components/FormFieldInput'
 import FormFieldSelect from '@/components/FormFieldSelect'
 import { useMobxStore } from '@/lib/config/mobx/MobxProvider'
@@ -38,106 +38,97 @@ export default observer(function TaskForm({ task }: Props) {
     initialValues: {
       title: task.title,
       description: task.description,
-      responsible: task.responsible_login,
+      responsible: task.responsible_login || mobxStore.userData.login,
       priority: task.priority,
       status: task.status,
       finishDate: finishDate,
     },
     validationSchema: schemaTaskData,
     onSubmit: async (values) => {
-      let updatedObject: any = {}
-      try {
-        setSuccessMessage(null)
-        setErrorMessage(null)
-        await updateTask(task?.id || 0, values).then((result) => {
-          setSuccessMessage('Данные успешно обновлены!')
-          updatedObject = result.data
-          // Update tasks in store
-          const taskIndex = mobxStore.tasks.findIndex(
-            (storedTask: Task) => storedTask.id === task.id,
-          )
-          const taskFromStore = mobxStore.tasks[taskIndex]
-          const updatedTaskForStore = {
-            ...taskFromStore,
-            title: updatedObject.title,
-            description: updatedObject.description,
-            priority: updatedObject.priority,
-            status: updatedObject.status,
-            responsible_user_id: updatedObject.responsible_user_id,
-            responsible_login: updatedObject.responsible_login,
-            finish_at: updatedObject.finish_at,
-            updated_at: updatedObject.updated_at,
+      setSuccessMessage(null)
+      setErrorMessage(null)
+      if (task?.id > 0) {
+        try {
+          await updateTask(task?.id || 0, values).then((result) => {
+            setSuccessMessage('Данные успешно обновлены!')
+            let updatedObject = result.data
+            // Update tasks in store
+            const taskIndex = mobxStore.tasks.findIndex(
+              (storedTask: Task) => storedTask.id === task.id,
+            )
+            const taskFromStore = mobxStore.tasks[taskIndex]
+            const updatedTaskForStore = {
+              ...taskFromStore,
+              title: updatedObject.title,
+              description: updatedObject.description,
+              priority: updatedObject.priority,
+              status: updatedObject.status,
+              responsible_user_id: updatedObject.responsible_user_id,
+              responsible_login: updatedObject.responsible_login,
+              finish_at: updatedObject.finish_at,
+              updated_at: updatedObject.updated_at,
+            }
+            let updatedTasksFromStore = JSON.parse(
+              JSON.stringify(mobxStore.tasks),
+            )
+            updatedTasksFromStore.splice(taskIndex, 1)
+            updatedTasksFromStore.unshift(updatedTaskForStore)
+            mobxStore.setTasks(updatedTasksFromStore)
+          })
+        } catch (error) {
+          if (error?.toString() === 'Error: Validation Error') {
+            setErrorMessage(
+              'Указаны неверные данные. Пожалуйста проверьте данные.',
+            )
+          } else if (
+            error?.toString() ===
+            'Error: Error of getting responsible user data'
+          ) {
+            setErrorMessage(
+              'Не удалось обновить данные. Нельзя указать ответственным этого пользователя.',
+            )
+          } else if (error?.toString() === 'Error: Wrong responsible user') {
+            setErrorMessage(
+              'Не удалось обновить данные. Можно указать ответственным только своего подчиненного.',
+            )
+          } else {
+            setErrorMessage(
+              'Не удалось обновить данные. Пожалуйста попробуйте позже.',
+            )
           }
-          let updatedTasksFromStore = JSON.parse(
-            JSON.stringify(mobxStore.tasks),
-          )
-          updatedTasksFromStore.splice(taskIndex, 1)
-          updatedTasksFromStore.unshift(updatedTaskForStore)
-          mobxStore.setTasks(updatedTasksFromStore)
-        })
-      } catch (error) {
-        if (error?.toString() === 'Error: Validation Error') {
-          setErrorMessage(
-            'Указаны неверные данные. Пожалуйста проверьте данные.',
-          )
-        } else if (
-          error?.toString() === 'Error: Error of getting responsible user data'
-        ) {
-          setErrorMessage(
-            'Не удалось обновить данные. Нельзя указать ответственным этого пользователя.',
-          )
-        } else if (error?.toString() === 'Error: Wrong responsible user') {
-          setErrorMessage(
-            'Не удалось обновить данные. Можно указать ответственным только своего подчиненного.',
-          )
-        } else {
-          setErrorMessage(
-            'Не удалось обновить данные. Пожалуйста попробуйте позже.',
-          )
+        }
+      } else {
+        try {
+          await createNewTask(values).then((result) => {
+            setSuccessMessage('Задача успешно добавлена!')
+            let insertedObject: any = result?.data
+            // Add task in store
+            let updatedTasksFromStore = JSON.parse(
+              JSON.stringify(mobxStore.tasks),
+            )
+            updatedTasksFromStore.unshift(insertedObject)
+            mobxStore.setTasks(updatedTasksFromStore)
+          })
+        } catch (error) {
+          if (error?.toString() === 'Error: Validation Error') {
+            setErrorMessage(
+              'Указаны неверные данные. Пожалуйста проверьте данные.',
+            )
+          } else if (
+            error?.toString() ===
+            'Error: Error of getting responsible user data'
+          ) {
+            setErrorMessage(
+              'Не удалось обновить данные. Нельзя указать ответственным этого пользователя.',
+            )
+          } else {
+            setErrorMessage(
+              'Не удалось создать задачу. Пожалуйста попробуйте позже.',
+            )
+          }
         }
       }
     },
-    // onSubmit: async (values) => {
-    //     try {
-    //       setSuccessMessage(null)
-    //       setErrorMessage(null)
-    //       await createNewTask(values).then(() => {
-    //         setSuccessMessage('Задание успешно добавлено!')
-    //         if (onUpdate) {
-    //           onUpdate({
-    //             ...taskState,
-    //             title: values.title,
-    //             description: values.description,
-    //             responsible_login: values.responsible,
-    //             priority: values.priority,
-    //             status: values.status,
-    //             finish_at: new Date(values.finishDate).toString(),
-    //             updated_at: new Date().toString(),
-    //           })
-    //         }
-    //       })
-    //     } catch (error) {
-    //       if (error?.toString() === 'Error: Validation Error') {
-    //         setErrorMessage(
-    //           'Указаны неверные данные. Пожалуйста проверьте данные.',
-    //         )
-    //       } else if (
-    //         error?.toString() ===
-    //         'Error: Error of getting responsible user data'
-    //       ) {
-    //         setErrorMessage(
-    //           'Не удалось обновить данные. Нельзя указать ответственным этого пользователя.',
-    //         )
-    //       } else if (error?.toString() === 'Error: Wrong responsible user') {
-    //         setErrorMessage(
-    //           'Не удалось обновить данные. Можно указать ответственным только своего подчиненного.',
-    //         )
-    //       } else {
-    //         setErrorMessage(
-    //           'Не удалось обновить данные. Пожалуйста попробуйте позже.',
-    //         )
-    //       }
-    // },
   })
 
   return (

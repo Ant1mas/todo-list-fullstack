@@ -12,8 +12,7 @@ export const getUserById = cache(async (userId: number) => {
     const user = data[0]
     return user
   } catch (error) {
-    console.log('Failed to fetch user')
-    return null
+    throw new Error('Failed to fetch user')
   }
 })
 
@@ -29,8 +28,7 @@ export const getUserByLogin = cache(async (userLogin: number) => {
     }
     return user
   } catch (error) {
-    console.log('Failed to fetch user')
-    return null
+    throw new Error('Failed to fetch user')
   }
 })
 
@@ -45,7 +43,6 @@ export const getSubordinatesById = cache(async (userId: number) => {
     }
     return users
   } catch (error) {
-    console.log('Failed to fetch user')
-    return null
+    throw new Error('Failed to fetch user')
   }
 })
