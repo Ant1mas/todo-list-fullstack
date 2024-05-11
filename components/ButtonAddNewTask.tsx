@@ -22,7 +22,7 @@ export default function ButtonAddNewTask({}: Props) {
           setShowModal(true)
         }}
       >
-        Добавить новую задачу
+        Новая задача
       </button>
     </>
   )
