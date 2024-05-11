@@ -1,5 +1,5 @@
-import { getAllTasks } from '@/app/tasks/actions'
 import TasksContainer from '@/components/TasksContainer'
+import { getAllTasks } from '@/lib/actions/tasks'
 import { getSubordinatesById } from '@/lib/actions/users'
 import { getUserData } from '@/lib/dataAccessLayer'
 

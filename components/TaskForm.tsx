@@ -4,9 +4,9 @@ import { useFormik } from 'formik'
 import { observer } from 'mobx-react-lite'
 import { useMemo, useState } from 'react'
 
-import { createNewTask, updateTask } from '@/app/tasks/actions'
 import FormFieldInput from '@/components/FormFieldInput'
 import FormFieldSelect from '@/components/FormFieldSelect'
+import { createNewTask, updateTask } from '@/lib/actions/tasks'
 import { useMobxStore } from '@/lib/config/mobx/MobxProvider'
 import { schemaTaskData } from '@/lib/config/yup/taskData'
 import {
