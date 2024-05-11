@@ -1,8 +1,8 @@
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import { logout } from '@/lib/actions/auth'
 import { getUserData, verifySession } from '@/lib/dataAccessLayer'
-import Link from 'next/link'
 
 type Props = {}
 

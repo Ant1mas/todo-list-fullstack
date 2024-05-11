@@ -1,8 +1,8 @@
+import { isInPast } from '@/lib/functions/isInPast'
 import { isThisWeek } from '@/lib/functions/isThisWeek'
 import { isToday } from '@/lib/functions/isToday'
 
 import type { GroupBy, Task } from '@/app/tasks/types'
-import { isInPast } from '@/lib/functions/isInPast'
 
 export type GroupedTasks = any
 

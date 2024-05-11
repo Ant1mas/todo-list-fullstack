@@ -1,7 +1,7 @@
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import { getUserData, verifySession } from '@/lib/dataAccessLayer'
-import Link from 'next/link'
 
 export default async function layout({
   children,

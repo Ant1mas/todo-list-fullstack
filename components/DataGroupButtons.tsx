@@ -1,7 +1,7 @@
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import type { GroupBy } from '@/app/tasks/types'
-import Link from 'next/link'
 
 type Props = {
   groupBy?: GroupBy

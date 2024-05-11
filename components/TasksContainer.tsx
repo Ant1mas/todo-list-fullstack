@@ -1,6 +1,7 @@
 'use client'
 
 import { observer } from 'mobx-react-lite'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo } from 'react'
 
 import TasksGroupedByFinish from '@/components/TasksGroupedByFinish'
@@ -8,7 +9,6 @@ import TasksGroupedByResponsibleUser from '@/components/TasksGroupedByResponsibl
 import TasksUngrouped from '@/components/TasksUngrouped'
 import { useMobxStore } from '@/lib/config/mobx/MobxProvider'
 import { groupTasks } from '@/lib/functions/groupTasks'
-import { useSearchParams } from 'next/navigation'
 
 import type { Task } from '@/app/tasks/types'
 

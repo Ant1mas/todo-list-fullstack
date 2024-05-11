@@ -1,9 +1,10 @@
 'use client'
 
+import React from 'react'
+
 import TaskRow from '@/components/TaskRow'
 
 import type { Task } from '@/app/tasks/types'
-import React from 'react'
 
 type Props = {
   tasks: {
