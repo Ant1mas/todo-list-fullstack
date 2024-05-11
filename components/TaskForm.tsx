@@ -52,6 +52,28 @@ export default observer(function TaskForm({ task }: Props) {
         await updateTask(task?.id || 0, values).then((result) => {
           setSuccessMessage('Данные успешно обновлены!')
           updatedObject = result.data
+          // Update tasks in store
+          const taskIndex = mobxStore.tasks.findIndex(
+            (storedTask: Task) => storedTask.id === task.id,
+          )
+          const taskFromStore = mobxStore.tasks[taskIndex]
+          const updatedTaskForStore = {
+            ...taskFromStore,
+            title: updatedObject.title,
+            description: updatedObject.description,
+            priority: updatedObject.priority,
+            status: updatedObject.status,
+            responsible_user_id: updatedObject.responsible_user_id,
+            responsible_login: updatedObject.responsible_login,
+            finish_at: updatedObject.finish_at,
+            updated_at: updatedObject.updated_at,
+          }
+          let updatedTasksFromStore = JSON.parse(
+            JSON.stringify(mobxStore.tasks),
+          )
+          updatedTasksFromStore.splice(taskIndex, 1)
+          updatedTasksFromStore.unshift(updatedTaskForStore)
+          mobxStore.setTasks(updatedTasksFromStore)
         })
       } catch (error) {
         if (error?.toString() === 'Error: Validation Error') {
@@ -74,26 +96,6 @@ export default observer(function TaskForm({ task }: Props) {
           )
         }
       }
-      // Update tasks in store
-      const taskIndex = mobxStore.tasks.findIndex(
-        (storedTask: Task) => storedTask.id === task.id,
-      )
-      const taskFromStore = mobxStore.tasks[taskIndex]
-      const updatedTaskForStore = {
-        ...taskFromStore,
-        title: updatedObject.title,
-        description: updatedObject.description,
-        priority: updatedObject.priority,
-        status: updatedObject.status,
-        responsible_user_id: updatedObject.responsible_user_id,
-        responsible_login: updatedObject.responsible_login,
-        finish_at: updatedObject.finish_at,
-        updated_at: updatedObject.updated_at,
-      }
-      let updatedTasksFromStore = JSON.parse(JSON.stringify(mobxStore.tasks))
-      updatedTasksFromStore.splice(taskIndex, 1)
-      updatedTasksFromStore.unshift(updatedTaskForStore)
-      mobxStore.setTasks(updatedTasksFromStore)
     },
     // onSubmit: async (values) => {
     //     try {

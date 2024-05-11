@@ -149,8 +149,10 @@ export const updateTask = async (taskId: number, taskObj: any) => {
   allowedFields = getAllowedTaskFields(taskDataDb, userData)
   // Check manager assignments
   try {
-    const userData = await getUserData()
-    if (userData.manager_id === null) {
+    if (
+      taskObj.responsible !== taskDataDb.responsible_login &&
+      userData.manager_id === null
+    ) {
       if (responsibleUserData.manager_id !== userData.id) {
         throw new Error('Wrong responsible user')
       }
