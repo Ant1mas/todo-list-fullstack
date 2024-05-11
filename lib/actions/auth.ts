@@ -3,7 +3,7 @@
 import bcrypt from 'bcryptjs'
 import { redirect } from 'next/navigation'
 
-import { getKnex } from '@/lib/knex'
+import { getKnex } from '@/lib/config/knex'
 import { createSession, deleteSession } from '@/lib/session'
 
 export async function signin(formData: FormData) {

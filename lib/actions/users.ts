@@ -1,7 +1,7 @@
 import { cache } from 'react'
 
+import { getKnex } from '@/lib/config/knex'
 import { verifySession } from '@/lib/dataAccessLayer'
-import { getKnex } from '@/lib/knex'
 
 export const getUserById = cache(async (userId: number) => {
   const session = await verifySession()

@@ -3,10 +3,10 @@
 import { cache } from 'react'
 
 import { getUserByLogin } from '@/lib/actions/users'
+import { getKnex } from '@/lib/config/knex'
 import { schemaTaskData } from '@/lib/config/yup/taskData'
 import { getUserData, verifySession } from '@/lib/dataAccessLayer'
 import { getAllowedTaskFields } from '@/lib/functions/getAllowedTaskFields'
-import { getKnex } from '@/lib/knex'
 
 export const getAllTasks = cache(async () => {
   const session = await verifySession()
