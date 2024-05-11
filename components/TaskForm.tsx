@@ -4,7 +4,7 @@ import { useFormik } from 'formik'
 import { observer } from 'mobx-react-lite'
 import { useMemo, useState } from 'react'
 
-import { createNewTask, updateTask } from '@/app/tasks/actions'
+import { updateTask } from '@/app/tasks/actions'
 import FormFieldInput from '@/components/FormFieldInput'
 import FormFieldSelect from '@/components/FormFieldSelect'
 import { useMobxStore } from '@/lib/config/mobx/MobxProvider'
@@ -21,116 +21,121 @@ import type { Task } from '@/app/tasks/types'
 
 type Props = {
   task: Task
-  onUpdate?: (newState: Task) => any
 }
 
-export default observer(function TaskForm({ task, onUpdate }: Props) {
-  const [taskState, setTaskState] = useState<Task>(task)
+export default observer(function TaskForm({ task }: Props) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const mobxStore: any = useMobxStore()
-  const finishDate = toDateTimeLocal(new Date(taskState?.finish_at || ''))
-  const createdAt = dateToString(new Date(taskState?.created_at || '') || '')
-  const updatedAt = dateToString(new Date(taskState?.updated_at || '') || '')
+  const finishDate = toDateTimeLocal(new Date(task?.finish_at || ''))
+  const createdAt = dateToString(new Date(task?.created_at || '') || '')
+  const updatedAt = dateToString(new Date(task?.updated_at || '') || '')
   const allowedFields = useMemo(
-    () => getAllowedTaskFields(taskState, mobxStore.userData),
-    [taskState, mobxStore.userData],
+    () => getAllowedTaskFields(task, mobxStore.userData),
+    [task, mobxStore.userData],
   )
   const formik = useFormik({
     initialValues: {
-      title: taskState.title,
-      description: taskState.description,
-      responsible: taskState.responsible_login,
-      priority: taskState.priority,
-      status: taskState.status,
+      title: task.title,
+      description: task.description,
+      responsible: task.responsible_login,
+      priority: task.priority,
+      status: task.status,
       finishDate: finishDate,
     },
     validationSchema: schemaTaskData,
     onSubmit: async (values) => {
-      if (taskState?.id > 0) {
-        try {
-          setSuccessMessage(null)
-          setErrorMessage(null)
-          await updateTask(taskState?.id || 0, values).then(() => {
-            setSuccessMessage('Данные успешно обновлены!')
-            if (onUpdate) {
-              onUpdate({
-                ...taskState,
-                title: values.title,
-                description: values.description,
-                responsible_login: values.responsible,
-                priority: values.priority,
-                status: values.status,
-                finish_at: new Date(values.finishDate).toString(),
-                updated_at: new Date().toString(),
-              })
-            }
-          })
-        } catch (error) {
-          if (error?.toString() === 'Error: Validation Error') {
-            setErrorMessage(
-              'Указаны неверные данные. Пожалуйста проверьте данные.',
-            )
-          } else if (
-            error?.toString() ===
-            'Error: Error of getting responsible user data'
-          ) {
-            setErrorMessage(
-              'Не удалось обновить данные. Нельзя указать ответственным этого пользователя.',
-            )
-          } else if (error?.toString() === 'Error: Wrong responsible user') {
-            setErrorMessage(
-              'Не удалось обновить данные. Можно указать ответственным только своего подчиненного.',
-            )
-          } else {
-            setErrorMessage(
-              'Не удалось обновить данные. Пожалуйста попробуйте позже.',
-            )
-          }
-        }
-      } else {
-        try {
-          setSuccessMessage(null)
-          setErrorMessage(null)
-          await createNewTask(values).then(() => {
-            setSuccessMessage('Задание успешно добавлено!')
-            if (onUpdate) {
-              onUpdate({
-                ...taskState,
-                title: values.title,
-                description: values.description,
-                responsible_login: values.responsible,
-                priority: values.priority,
-                status: values.status,
-                finish_at: new Date(values.finishDate).toString(),
-                updated_at: new Date().toString(),
-              })
-            }
-          })
-        } catch (error) {
-          if (error?.toString() === 'Error: Validation Error') {
-            setErrorMessage(
-              'Указаны неверные данные. Пожалуйста проверьте данные.',
-            )
-          } else if (
-            error?.toString() ===
-            'Error: Error of getting responsible user data'
-          ) {
-            setErrorMessage(
-              'Не удалось обновить данные. Нельзя указать ответственным этого пользователя.',
-            )
-          } else if (error?.toString() === 'Error: Wrong responsible user') {
-            setErrorMessage(
-              'Не удалось обновить данные. Можно указать ответственным только своего подчиненного.',
-            )
-          } else {
-            setErrorMessage(
-              'Не удалось обновить данные. Пожалуйста попробуйте позже.',
-            )
-          }
+      let updatedObject: any = {}
+      try {
+        setSuccessMessage(null)
+        setErrorMessage(null)
+        await updateTask(task?.id || 0, values).then((result) => {
+          setSuccessMessage('Данные успешно обновлены!')
+          updatedObject = result.data
+        })
+      } catch (error) {
+        if (error?.toString() === 'Error: Validation Error') {
+          setErrorMessage(
+            'Указаны неверные данные. Пожалуйста проверьте данные.',
+          )
+        } else if (
+          error?.toString() === 'Error: Error of getting responsible user data'
+        ) {
+          setErrorMessage(
+            'Не удалось обновить данные. Нельзя указать ответственным этого пользователя.',
+          )
+        } else if (error?.toString() === 'Error: Wrong responsible user') {
+          setErrorMessage(
+            'Не удалось обновить данные. Можно указать ответственным только своего подчиненного.',
+          )
+        } else {
+          setErrorMessage(
+            'Не удалось обновить данные. Пожалуйста попробуйте позже.',
+          )
         }
       }
+      // Update tasks in store
+      const taskIndex = mobxStore.tasks.findIndex(
+        (storedTask: Task) => storedTask.id === task.id,
+      )
+      const taskFromStore = mobxStore.tasks[taskIndex]
+      const updatedTaskForStore = {
+        ...taskFromStore,
+        title: updatedObject.title,
+        description: updatedObject.description,
+        priority: updatedObject.priority,
+        status: updatedObject.status,
+        responsible_user_id: updatedObject.responsible_user_id,
+        responsible_login: updatedObject.responsible_login,
+        finish_at: updatedObject.finish_at,
+        updated_at: updatedObject.updated_at,
+      }
+      let updatedTasksFromStore = JSON.parse(JSON.stringify(mobxStore.tasks))
+      updatedTasksFromStore.splice(taskIndex, 1)
+      updatedTasksFromStore.unshift(updatedTaskForStore)
+      mobxStore.setTasks(updatedTasksFromStore)
     },
+    // onSubmit: async (values) => {
+    //     try {
+    //       setSuccessMessage(null)
+    //       setErrorMessage(null)
+    //       await createNewTask(values).then(() => {
+    //         setSuccessMessage('Задание успешно добавлено!')
+    //         if (onUpdate) {
+    //           onUpdate({
+    //             ...taskState,
+    //             title: values.title,
+    //             description: values.description,
+    //             responsible_login: values.responsible,
+    //             priority: values.priority,
+    //             status: values.status,
+    //             finish_at: new Date(values.finishDate).toString(),
+    //             updated_at: new Date().toString(),
+    //           })
+    //         }
+    //       })
+    //     } catch (error) {
+    //       if (error?.toString() === 'Error: Validation Error') {
+    //         setErrorMessage(
+    //           'Указаны неверные данные. Пожалуйста проверьте данные.',
+    //         )
+    //       } else if (
+    //         error?.toString() ===
+    //         'Error: Error of getting responsible user data'
+    //       ) {
+    //         setErrorMessage(
+    //           'Не удалось обновить данные. Нельзя указать ответственным этого пользователя.',
+    //         )
+    //       } else if (error?.toString() === 'Error: Wrong responsible user') {
+    //         setErrorMessage(
+    //           'Не удалось обновить данные. Можно указать ответственным только своего подчиненного.',
+    //         )
+    //       } else {
+    //         setErrorMessage(
+    //           'Не удалось обновить данные. Пожалуйста попробуйте позже.',
+    //         )
+    //       }
+    // },
   })
 
   return (
@@ -193,11 +198,11 @@ export default observer(function TaskForm({ task, onUpdate }: Props) {
           disabled={!allowedFields.finishDate}
         />
       </div>
-      {taskState.id > 0 && (
+      {task.id > 0 && (
         <div className="mb-2">
-          <div>ID Задачи: {taskState?.id}</div>
-          <div title={`ID: ${taskState?.created_by}`}>
-            Создал: {taskState?.creator_login}
+          <div>ID Задачи: {task?.id}</div>
+          <div title={`ID: ${task?.created_by}`}>
+            Создал: {task?.creator_login}
           </div>
           <div>Дата создания: {createdAt}</div>
           <div>Дата обновления: {updatedAt}</div>
@@ -220,8 +225,8 @@ export default observer(function TaskForm({ task, onUpdate }: Props) {
         type="submit"
         className="mt-1 w-full rounded-3xl bg-green-500 px-4 py-2 text-white outline-none duration-150 hover:bg-green-600 focus:bg-green-600 disabled:bg-gray-400"
       >
-        {!formik.isSubmitting && taskState.id > 0 ? 'Обновить' : null}
-        {!formik.isSubmitting && taskState.id <= 0 ? 'Создать' : null}
+        {!formik.isSubmitting && task.id > 0 ? 'Обновить' : null}
+        {!formik.isSubmitting && task.id <= 0 ? 'Создать' : null}
         {formik.isSubmitting ? 'Выполняется...' : null}
       </button>
     </form>

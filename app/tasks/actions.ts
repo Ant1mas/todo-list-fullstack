@@ -1,6 +1,5 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
 import { cache } from 'react'
 
 import { getUserByLogin } from '@/lib/actions/users'
@@ -159,31 +158,33 @@ export const updateTask = async (taskId: number, taskObj: any) => {
   } catch (error) {
     throw new Error('Wrong responsible user')
   }
+  const newObject = {
+    title: allowedFields.title ? taskObj.title : taskDataDb.title,
+    description: allowedFields.description
+      ? taskObj.description
+      : taskDataDb.description,
+    responsible_user_id: allowedFields.responsible
+      ? responsibleUserData.id
+      : taskDataDb.responsible_user_id,
+    priority: allowedFields.priority ? taskObj.priority : taskDataDb.priority,
+    status: allowedFields.status ? taskObj.status : taskDataDb.status,
+    finish_at: allowedFields.finishDate
+      ? new Date(taskObj.finishDate)
+      : taskDataDb.finish_at,
+    updated_at: new Date(),
+  }
   try {
     const knex = getKnex()
-    await knex('tasks')
+    const result = await knex('tasks')
       .where('id', taskId)
-      .update({
-        title: allowedFields.title ? taskObj.title : taskDataDb.title,
-        description: allowedFields.description
-          ? taskObj.description
-          : taskDataDb.description,
-        responsible_user_id: allowedFields.responsible
-          ? responsibleUserData.id
-          : taskDataDb.responsible_user_id,
-        priority: allowedFields.priority
-          ? taskObj.priority
-          : taskDataDb.priority,
-        status: allowedFields.status ? taskObj.status : taskDataDb.status,
-        finish_at: allowedFields.finishDate
-          ? new Date(taskObj.finishDate)
-          : taskDataDb.finish_at,
-        updated_at: new Date(),
+      .update(newObject)
+      .then((numberOfUpdatedRows: any) => {
+        return {
+          numberOfUpdatedRows,
+          data: { ...newObject, responsible_login: taskObj.responsible },
+        }
       })
-      .then((numberOfUpdatedRows: number) => {
-        revalidatePath('/tasks')
-        return numberOfUpdatedRows
-      })
+    return result
   } catch (error) {
     console.log('Failed to update task')
     return null

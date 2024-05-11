@@ -45,15 +45,17 @@ export default observer(function TasksContainer({
 
   useEffect(() => {
     mobxStore.setUserData(userData)
-  }, [userData])
+  }, [JSON.stringify(userData)])
 
   useEffect(() => {
-    mobxStore.setTasks(tasks)
-  }, [tasks])
+    if (mobxStore.tasks.length <= 0) {
+      mobxStore.setTasks(JSON.parse(JSON.stringify(tasks)))
+    }
+  }, [JSON.stringify(tasks)])
 
   useEffect(() => {
     mobxStore.setSubordinatesData(subordinates)
-  }, [subordinates])
+  }, [JSON.stringify(subordinates)])
 
   if (groupBy === 'byFinishDate') {
     return <TasksGroupedByFinish tasks={tasksGroupedByFinishDate} />

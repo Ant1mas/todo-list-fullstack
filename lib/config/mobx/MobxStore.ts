@@ -1,22 +1,22 @@
-import { action, makeObservable, observable } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 
 export const createMobxStore = (props: any) => {
   const store = {
-    userData: observable({}),
-    setUserData: action(function (newValue: any) {
-      store.userData = newValue
-    }),
-    tasks: observable([]),
-    setTasks: action(function (newValue: any) {
-      store.tasks = newValue
-    }),
-    subordinatesData: observable([]),
-    setSubordinatesData: action(function (newValue: any) {
-      store.subordinatesData = newValue
-    }),
+    userData: {},
+    setUserData(newValue: any) {
+      this.userData = newValue
+    },
+    tasks: [],
+    setTasks(newValue: any) {
+      this.tasks = newValue
+    },
+    subordinatesData: [],
+    setSubordinatesData(newValue: any) {
+      this.subordinatesData = newValue
+    },
   }
 
-  makeObservable(store)
+  makeAutoObservable(store)
 
   return store
 }

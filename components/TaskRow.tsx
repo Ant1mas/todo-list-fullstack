@@ -16,26 +16,20 @@ type Props = {
 }
 
 export default function TaskRow({ task }: Props) {
-  const [taskState, setTaskState] = useState<Task>(task)
   const [showModal, setShowModal] = useState<boolean>(false)
-  const priority = PRIORITIES[taskState.priority]
-  const status = STATUSES[taskState.status]
-  const finishDate = dateToString(new Date(taskState.finish_at))
-  const responsibleUserLogin = taskState.responsible_login
-  const taskColor = getTaskColor(taskState)
+  const priority = PRIORITIES[task.priority]
+  const status = STATUSES[task.status]
+  const finishDate = dateToString(new Date(task.finish_at))
+  const responsibleUserLogin = task.responsible_login
+  const taskColor = getTaskColor(task)
 
   return (
     <>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <TaskForm
-          task={taskState}
-          onUpdate={(updatedState) => {
-            setTaskState(updatedState)
-          }}
-        />
+        <TaskForm task={task} />
       </Modal>
       <tr
-        key={taskState.id}
+        key={task.id}
         className="cursor-pointer duration-150 hover:bg-gray-50"
         onClick={() => {
           setShowModal(true)
@@ -49,11 +43,11 @@ export default function TaskRow({ task }: Props) {
             taskColor === 'red' ? 'bg-red-200' : null,
           )}
         >
-          {taskState.title}
+          {task.title}
         </td>
         <td className="px-2 py-1">{priority}</td>
         <td className="px-2">{finishDate}</td>
-        <td className="px-2" title={`ID: ${taskState.responsible_user_id}`}>
+        <td className="px-2" title={`ID: ${task.responsible_user_id}`}>
           {responsibleUserLogin}
         </td>
         <td className="px-2">{status}</td>
