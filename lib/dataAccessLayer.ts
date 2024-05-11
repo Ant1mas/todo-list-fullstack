@@ -24,6 +24,6 @@ export const getUserData = cache(async () => {
     const user = data[0]
     return user
   } catch (error) {
-    throw new Error('Failed to fetch user')
+    console.log('Failed to fetch user')
   }
 })
