@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 
-export const createMobxStore = (props: any) => {
+export const createMobxStore = () => {
   const store = {
     userData: {},
     setUserData(newValue: any) {

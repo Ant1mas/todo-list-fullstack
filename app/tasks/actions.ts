@@ -32,56 +32,6 @@ export const getAllTasks = cache(async () => {
   }
 })
 
-export const getUserTasks = cache(async (userId: number) => {
-  const session = await verifySession()
-  if (!session) return null
-  try {
-    const knex = getKnex()
-    const data = await knex('tasks')
-      .leftJoin('users as creator', 'tasks.created_by', 'creator.id')
-      .leftJoin(
-        'users as responsible',
-        'tasks.responsible_user_id',
-        'responsible.id',
-      )
-      .where('responsible_user_id', userId)
-      .select(
-        'tasks.*',
-        'creator.login as creator_login',
-        'responsible.login as responsible_login',
-      )
-      .orderBy('updated_at', 'desc')
-    return data
-  } catch (error) {
-    throw new Error('Failed to fetch task')
-  }
-})
-
-export const getManagerTasks = cache(async (managerId: number) => {
-  const session = await verifySession()
-  if (!session) return null
-  try {
-    const knex = getKnex()
-    const data = await knex('tasks')
-      .leftJoin('users as creator', 'tasks.created_by', 'creator.id')
-      .leftJoin(
-        'users as responsible',
-        'tasks.responsible_user_id',
-        'responsible.id',
-      )
-      .where('responsible.manager_id', '=', managerId)
-      .select(
-        'tasks.*',
-        'creator.login as creator_login',
-        'responsible.login as responsible_login',
-      )
-      .orderBy('updated_at', 'desc')
-    return data
-  } catch (error) {
-    throw new Error('Failed to fetch task')
-  }
-})
-
 export const getTaskById = cache(async (taskId: number) => {
   const session = await verifySession()
   if (!session) return null
